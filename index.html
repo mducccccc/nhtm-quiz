@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>50 Câu Hỏi Đúng/Sai – Ngân Hàng Thương Mại</title>
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1a202c;
+      --sub: #4a5568;
+      --border: #e2e8f0;
+      --accent: #3b82f6;
+      --accent-dark: #2563eb;
+      --true: #16a34a;
+      --false: #dc2626;
+      --true-bg: #f0fdf4;
+      --false-bg: #fef2f2;
+      --tag-bg: #eff6ff;
+      --tag-text: #1d4ed8;
+      --header-bg: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    }
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --sub: #94a3b8;
+      --border: #334155;
+      --accent: #60a5fa;
+      --accent-dark: #3b82f6;
+      --true-bg: #052e16;
+      --false-bg: #450a0a;
+      --tag-bg: #1e3a8a;
+      --tag-text: #bfdbfe;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: var(--header-bg);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+    header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+    header p { font-size: 0.9rem; opacity: 0.85; margin-top: 0.3rem; }
+    .header-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+    .btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.7); }
+    .btn.active { background: white; color: #1e3a8a; border-color: white; }
+
+    .progress-bar-wrap {
+      background: rgba(255,255,255,0.2);
+      border-radius: 999px;
+      height: 6px;
+      width: 90%;
+      max-width: 600px;
+      margin: 0.8rem auto 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #34d399;
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+    .progress-label {
+      font-size: 0.78rem;
+      opacity: 0.85;
+      margin-top: 0.3rem;
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: 2px solid var(--border);
+      background: var(--card);
+      color: var(--sub);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--tag-bg);
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1rem 4rem;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 1.5rem 0 0.75rem;
+      padding: 0.4rem 1rem;
+      border-left: 4px solid var(--accent);
+      background: var(--tag-bg);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 0.85rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.1); }
+    .card.revealed { cursor: default; }
+    .card.revealed:hover { transform: none; }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .q-num {
+      min-width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border-radius: 50%;
+      font-size: 0.78rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .q-text {
+      font-size: 0.97rem;
+      line-height: 1.6;
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .answer-area {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .card.revealed .answer-area { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .verdict {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+    }
+    .verdict.true { background: var(--true-bg); color: var(--true); }
+    .verdict.false { background: var(--false-bg); color: var(--false); }
+
+    .explanation {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--sub);
+    }
+    .explanation strong { color: var(--text); }
+
+    .tap-hint {
+      font-size: 0.75rem;
+      color: var(--sub);
+      text-align: center;
+      margin-top: 0.5rem;
+      opacity: 0.6;
+    }
+
+    .scenario-box {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+    .scenario-box strong { color: var(--accent-dark); }
+
+    .choices {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.6rem 0;
+    }
+    .choice {
+      padding: 0.35rem 0.9rem;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      background: var(--card);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--sub);
+    }
+    .choice.correct {
+      border-color: var(--true);
+      color: var(--true);
+      background: var(--true-bg);
+    }
+
+    .score-panel {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.75rem 1.1rem;
+      box-shadow: var(--shadow);
+      font-size: 0.82rem;
+      color: var(--sub);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-width: 140px;
+    }
+    .score-panel .s-title { font-weight: 700; color: var(--text); font-size: 0.88rem; }
+    .score-panel .s-val { font-size: 1.3rem; font-weight: 800; color: var(--accent); }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.15rem; }
+      .card { padding: 1rem; }
+      .score-panel { bottom: 0.75rem; right: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📚 50 Câu Hỏi Đúng/Sai</h1>
+  <p>Ngân Hàng Thương Mại &amp; Tín Dụng Ngân Hàng</p>
+  <div class="header-controls">
+    <button class="btn" id="revealAllBtn" onclick="revealAll()">👁 Hiện tất cả</button>
+    <button class="btn" id="hideAllBtn" onclick="hideAll()">🙈 Ẩn tất cả</button>
+    <button class="btn" id="themeBtn" onclick="toggleTheme()">🌙 Dark mode</button>
+    <button class="btn" onclick="resetProgress()">🔄 Reset</button>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">Đã xem: 0 / 50 câu</div>
+</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterSection('all', this)">Tất cả</button>
+  <button class="filter-btn" onclick="filterSection('I', this)">I. Nguyên lý NHTM</button>
+  <button class="filter-btn" onclick="filterSection('II', this)">II. Quản trị NHTM</button>
+  <button class="filter-btn" onclick="filterSection('III', this)">III. Tín dụng NH</button>
+  <button class="filter-btn" onclick="filterSection('IV', this)">IV. Chính sách TD</button>
+  <button class="filter-btn" onclick="filterSection('V', this)">V. Quy trình TD</button>
+  <button class="filter-btn" onclick="filterSection('VI', this)">VI. Chất lượng TD</button>
+</div>
+
+<div class="container" id="mainContainer"></div>
+
+<div class="score-panel">
+  <div class="s-title">⚡ Tiến độ</div>
+  <div class="s-val" id="scoreVal">0<span style="font-size:0.9rem;font-weight:500;color:var(--sub)">/50</span></div>
+  <div style="color:var(--sub);font-size:0.78rem">câu đã xem</div>
+</div>
+
+<script>
+const data = [
+  // === SECTION I ===
+  { id:1, sec:"I", q:"Ngân hàng thương mại là loại hình tổ chức tín dụng duy nhất được phép thực hiện đầy đủ ba hoạt động ngân hàng cốt lõi.", ans:true, ex:"Theo <strong>Luật Các TCTD 2024 (Luật 32/2024/QH15)</strong>, NHTM được thực hiện tất cả hoạt động ngân hàng: nhận tiền gửi, cấp tín dụng và cung ứng dịch vụ thanh toán qua tài khoản. Các loại hình khác như TCTD phi ngân hàng chỉ được thực hiện một phần." },
+  { id:2, sec:"I", q:"Nhận tiền gửi, cấp tín dụng và cung ứng dịch vụ thanh toán qua tài khoản là ba hoạt động ngân hàng theo Luật Các TCTD 2024.", ans:true, ex:"<strong>Điều 4 Luật Các TCTD 2024</strong> định nghĩa rõ ba hoạt động ngân hàng này – đây là căn cứ để phân biệt TCTD là ngân hàng hay không phải ngân hàng." },
+  { id:3, sec:"I", q:"Hoạt động cho vay doanh nghiệp thuộc nhóm hoạt động sử dụng vốn của NHTM.", ans:true, ex:"Cho vay là hoạt động tài sản có (asset side), phản ánh việc ngân hàng triển khai nguồn vốn đã huy động được. Bên cạnh cho vay, sử dụng vốn còn bao gồm đầu tư chứng khoán, gửi tại TCTD khác và tài sản cố định." },
+  { id:4, sec:"I", q:"Phát hành giấy tờ có giá và nhận tiền gửi là hai hoạt động thuộc nhóm hoạt động tạo nguồn của NHTM.", ans:true, ex:"Tạo nguồn bao gồm mọi nghiệp vụ giúp ngân hàng hình thành nguồn vốn: nhận tiền gửi, vay từ NHNN, phát hành kỳ phiếu/trái phiếu. Cả hai hoạt động đều nằm ở bên <strong>nợ phải trả</strong> của bảng cân đối." },
+  { id:5, sec:"I", q:"Vốn chủ sở hữu và nợ phải trả cùng thể hiện nguồn hình thành nên tổng tài sản của ngân hàng.", ans:true, ex:"Đẳng thức kế toán: <strong>Tổng tài sản = Nợ phải trả + Vốn chủ sở hữu</strong>. Nợ phải trả phản ánh nguồn vốn huy động bên ngoài; vốn chủ sở hữu phản ánh phần vốn góp cổ đông và lợi nhuận giữ lại." },
+  { id:6, sec:"I", q:"Tài sản cố định và bất động sản đầu tư là thành phần quan trọng nhất bên tài sản có của NHTM.", ans:false, ex:"<strong>Sai.</strong> Trong kết cấu tài sản của NHTM, <strong>tín dụng</strong> (cho vay khách hàng và liên ngân hàng) thường chiếm tỷ trọng lớn nhất, xấp xỉ 68,5% trong ví dụ minh họa. Tài sản cố định và bất động sản chỉ chiếm tỷ lệ rất nhỏ." },
+  { id:7, sec:"I", q:"Tiền gửi không kỳ hạn của khách hàng được phản ánh ở bên tài sản có của bảng cân đối ngân hàng.", ans:false, ex:"<strong>Sai.</strong> Tiền gửi của khách hàng là khoản ngân hàng <strong>nợ</strong> khách hàng, do đó được phản ánh ở bên <strong>nợ phải trả (Liabilities)</strong>, không phải bên tài sản có." },
+  { id:8, sec:"I", q:"Bảo lãnh ngân hàng và thư tín dụng là các ví dụ về nghiệp vụ ngoại bảng.", ans:true, ex:"Nghiệp vụ ngoại bảng (off-balance sheet) là các cam kết và nghĩa vụ có điều kiện, chưa phát sinh dòng tiền thực tế nên không ghi trên bảng cân đối chính thức. Tuy nhiên, chúng vẫn <strong>tạo ra rủi ro</strong> và phải kiểm soát chặt." },
+  { id:9, sec:"I", q:"Nghiệp vụ ngoại bảng không phát sinh rủi ro vì không ảnh hưởng trực tiếp đến bảng cân đối.", ans:false, ex:"<strong>Sai.</strong> Ví dụ, khi khách hàng không thực hiện đúng nghĩa vụ với bên thứ ba, ngân hàng bảo lãnh phải thanh toán thay – lúc đó rủi ro tín dụng chuyển hóa thành tổn thất thực tế trên bảng cân đối." },
+  { id:10, sec:"I", q:"Trong kết cấu nguồn vốn minh họa, tiền gửi khách hàng chiếm tỷ trọng lớn nhất.", ans:true, ex:"Tiền gửi từ khách hàng thường là <strong>nguồn vốn huy động chủ yếu</strong> của NHTM, phản ánh đặc trưng kinh doanh dựa trên nguồn tiền nhàn rỗi của dân cư và tổ chức." },
+
+  // === SECTION II ===
+  { id:11, sec:"II", q:"Ba mục tiêu quản trị cốt lõi của NHTM là sinh lời, thanh khoản và an toàn vốn.", ans:true, ex:"Ba mục tiêu này cần <strong>xem xét đồng thời</strong> trong mọi quyết định quản trị. Ưu tiên thái quá cho bất kỳ mục tiêu nào cũng tạo ra rủi ro: tối đa hóa sinh lời có thể làm suy giảm thanh khoản và an toàn." },
+  { id:12, sec:"II", q:"Một quyết định tín dụng tối ưu là quyết định cân bằng giữa sinh lời, thanh khoản và an toàn.", ans:true, ex:"Nguyên lý quản trị NHTM yêu cầu <strong>không tối đa hóa đơn lẻ</strong> bất kỳ mục tiêu nào. Một khoản tín dụng lãi suất cao nhưng rủi ro quá lớn hoặc kỳ hạn không phù hợp thanh khoản đều không phải quyết định tốt." },
+  { id:13, sec:"II", q:"Sản phẩm ngân hàng mang tính vô hình và không thể lưu kho.", ans:true, ex:"Đây là đặc điểm cơ bản của sản phẩm dịch vụ tài chính – ngân hàng. Các sản phẩm như khoản vay, tài khoản thanh toán, dịch vụ chuyển tiền <strong>không có hình thái vật chất</strong> và không thể sản xuất trước rồi tồn kho." },
+  { id:14, sec:"II", q:"Kinh doanh ngân hàng không chịu nhiều sự kiểm soát của Nhà nước vì đây là hoạt động thương mại thuần túy.", ans:false, ex:"<strong>Sai.</strong> Ngân hàng là lĩnh vực <strong>kinh doanh có điều kiện</strong>, chịu sự kiểm soát chặt chẽ của NHNN. Nguyên nhân do hoạt động ngân hàng liên quan đến tiền gửi của công chúng, có ảnh hưởng hệ thống và tác động đến ổn định kinh tế vĩ mô." },
+  { id:15, sec:"II", q:"Lãi suất cho vay phải bù đắp chi phí vốn huy động, chi phí vận hành, tổn thất tín dụng kỳ vọng và yêu cầu sinh lợi vốn chủ sở hữu.", ans:true, ex:"Giá tín dụng phải phủ đủ 4 thành phần: (1) chi phí vốn huy động, (2) chi phí hoạt động, (3) tổn thất tín dụng kỳ vọng (EL), và (4) lợi nhuận yêu cầu trên vốn chủ sở hữu. Thiếu bất kỳ thành phần nào, ngân hàng có thể cho vay <strong>dưới giá vốn</strong>." },
+
+  // === SECTION III ===
+  { id:16, sec:"III", q:"Trong quan hệ tín dụng ngân hàng, khách hàng vay chỉ có nghĩa vụ hoàn trả vốn gốc, không bao gồm lãi.", ans:false, ex:"<strong>Sai.</strong> Khách hàng vay có nghĩa vụ hoàn trả <strong>cả vốn gốc lẫn lãi</strong> theo thỏa thuận hợp đồng. Lãi chính là chi phí sử dụng vốn và là nguồn thu nhập chính của ngân hàng." },
+  { id:17, sec:"III", q:"Thu nhập từ hoạt động tín dụng là nguồn thu nhập lớn nhất và chủ yếu của hầu hết NHTM Việt Nam.", ans:true, ex:"Tín dụng tạo ra <strong>thu nhập lãi (interest income)</strong> chiếm tỷ trọng cao trong tổng thu nhập của NHTM. Đây là lý do ngân hàng đặc biệt coi trọng chất lượng tín dụng và quản lý rủi ro tín dụng." },
+  { id:18, sec:"III", q:"Tín dụng trung hạn là khoản tín dụng có thời hạn từ 1 đến 5 năm.", ans:true, ex:"Phân loại theo kỳ hạn: <strong>ngắn hạn</strong> (dưới 12 tháng), <strong>trung hạn</strong> (từ 1–5 năm), <strong>dài hạn</strong> (trên 5 năm). Đây là cơ sở để ngân hàng quản lý rủi ro lãi suất và thanh khoản phù hợp với kỳ hạn nguồn vốn." },
+  { id:19, sec:"III", q:"Chiết khấu giấy tờ có giá là một trong các phương thức cấp tín dụng của NHTM.", ans:true, ex:"Chiết khấu giấy tờ có giá (thương phiếu, kỳ phiếu, hối phiếu…) là hình thức ngân hàng mua lại với giá thấp hơn mệnh giá; phần chênh lệch chính là lãi chiết khấu. Đây là hình thức cấp tín dụng được quy định trong Luật Các TCTD." },
+  { id:20, sec:"III", q:"Thấu chi tài khoản thanh toán là hình thức cấp tín dụng theo phương thức hạn mức.", ans:true, ex:"Thấu chi (overdraft) là hình thức ngân hàng cho phép khách hàng chi vượt số dư tài khoản đến một <strong>giới hạn nhất định</strong>. Đây là phương thức cấp tín dụng linh hoạt, phổ biến với khách hàng cá nhân và DNNVV." },
+  { id:21, sec:"III", q:"Tín dụng ngân hàng chỉ phục vụ nhu cầu của doanh nghiệp lớn và tập đoàn kinh tế.", ans:false, ex:"<strong>Sai.</strong> Tín dụng ngân hàng phục vụ <strong>đa dạng đối tượng</strong>: cá nhân, hộ gia đình, DNNVV, tập đoàn lớn và cả tổ chức Nhà nước – đây là một trong các vai trò quan trọng của tín dụng." },
+  { id:22, sec:"III", q:"Cho thuê tài chính không được xếp vào phạm trù tín dụng ngân hàng vì khác bản chất với cho vay thông thường.", ans:false, ex:"<strong>Sai.</strong> Cho thuê tài chính là một <strong>phương thức cấp tín dụng</strong> theo quy định của Luật Các TCTD. TCTD mua tài sản và cho khách hàng thuê; khách hàng trả tiền thuê định kỳ và có quyền mua lại khi hết hạn hợp đồng." },
+  { id:23, sec:"III", q:"Đồng tài trợ (syndicated lending) cho phép nhiều ngân hàng cùng cấp tín dụng cho một khách hàng theo một hợp đồng chung.", ans:true, ex:"Đồng tài trợ là phương thức cấp tín dụng hợp vốn, nhiều TCTD cùng tham gia tài trợ cho một dự án lớn vượt giới hạn đơn lẻ. Đây là cách <strong>phân tán rủi ro</strong> và đáp ứng nhu cầu vốn lớn." },
+  { id:24, sec:"III", q:"Hộ gia đình kinh doanh được xếp vào nhóm khách hàng tổ chức trong phân loại khách hàng tín dụng.", ans:false, ex:"<strong>Sai.</strong> Hộ gia đình (kể cả hộ kinh doanh) được xếp vào nhóm khách hàng <strong>cá nhân</strong>. Nhóm khách hàng tổ chức bao gồm: Nhà nước/cơ quan công quyền, TCTD, doanh nghiệp và tập đoàn kinh tế." },
+  { id:25, sec:"III", q:"Tín dụng ngân hàng là công cụ tài trợ phát triển cả ngành kinh tế mũi nhọn lẫn ngành kinh tế kém phát triển cần hỗ trợ.", ans:true, ex:"Tín dụng có vai trò thúc đẩy phát triển kinh tế theo hai hướng: <strong>tập trung vốn</strong> vào ngành trọng điểm và <strong>hỗ trợ</strong> các ngành/vùng kém phát triển thông qua tín dụng ưu đãi, tín dụng chính sách." },
+
+  // === SECTION IV ===
+  { id:26, sec:"IV", q:"Chính sách tín dụng nhằm khuếch trương hoặc hạn chế tín dụng để đạt mục tiêu kinh doanh và kiểm soát rủi ro.", ans:true, ex:"Chính sách tín dụng là hệ thống các quy định nội bộ của ngân hàng, định hướng toàn bộ hoạt động cấp tín dụng. Chính sách có thể <strong>mở rộng</strong> hoặc <strong>thắt chặt</strong> tùy theo chiến lược và điều kiện thị trường." },
+  { id:27, sec:"IV", q:"Giá tín dụng, thời hạn và bảo đảm là ba trong năm cấu phần cốt lõi của chính sách tín dụng.", ans:true, ex:"Năm cấu phần cốt lõi: (1) khách hàng mục tiêu, (2) quy mô và giới hạn tín dụng, (3) giá tín dụng (lãi suất, phí), (4) thời hạn và (5) bảo đảm tín dụng. Mỗi cấu phần cần được thiết kế <strong>đồng bộ</strong>." },
+  { id:28, sec:"IV", q:"Ngân hàng có thể cấp tín dụng không có bảo đảm hoặc với điều kiện ưu đãi cho thành viên Hội đồng quản trị của chính ngân hàng đó.", ans:false, ex:"<strong>Sai.</strong> Đây là trường hợp <strong>bị cấm</strong> theo Điều 135 Luật Các TCTD 2024. Thành viên HĐQT, Ban Giám đốc, Ban Kiểm soát không được nhận tín dụng ưu đãi từ chính TCTD họ điều hành – nhằm ngăn chặn xung đột lợi ích." },
+  { id:29, sec:"IV", q:"Tổng dư nợ cấp tín dụng cho toàn bộ đối tượng quy định tại điểm a đến đ khoản 1 Điều 135 không được vượt quá 5% vốn tự có của TCTD.", ans:true, ex:"Đây là giới hạn tổng thể đối với nhóm đối tượng có liên quan đến quản trị, điều hành ngân hàng (trừ trường hợp được ĐHCĐ chấp thuận). Giới hạn này nhằm kiểm soát <strong>rủi ro tập trung tín dụng nội bộ</strong>." },
+  { id:30, sec:"IV", q:"Kể từ ngày 01/01/2026, giới hạn cấp tín dụng tối đa cho một khách hàng là 13% vốn tự có của NHTM.", ans:true, ex:"Từ 01/01/2026 đến trước 01/01/2027, giới hạn đối với <strong>một khách hàng</strong> là 13% vốn tự có (bao gồm cả đầu tư vào trái phiếu do khách hàng phát hành). Mức này nhằm phân tán rủi ro tập trung tín dụng." },
+  { id:31, sec:"IV", q:"Giới hạn cấp tín dụng cho một khách hàng và người có liên quan trong năm 2026 là 21% vốn tự có.", ans:true, ex:"Từ 01/01/2026, giới hạn đối với <strong>một khách hàng và người có liên quan</strong> là 21% vốn tự có của NHTM. Lưu ý: Con số 15% là giới hạn áp dụng cho <strong>nhóm công ty con, công ty liên kết</strong> – không phải khách hàng thông thường." },
+  { id:32, sec:"IV", q:"Khi nhu cầu vay vốn của khách hàng vượt giới hạn cấp tín dụng, ngân hàng phải từ chối hoàn toàn và không có giải pháp thay thế nào.", ans:false, ex:"<strong>Sai.</strong> Trong trường hợp nhu cầu vốn vượt giới hạn đơn lẻ, ngân hàng có thể xem xét <strong>tín dụng hợp vốn (đồng tài trợ)</strong> với sự tham gia của nhiều TCTD khác – đáp ứng nhu cầu vốn lớn trong khi vẫn tuân thủ giới hạn." },
+  { id:33, sec:"IV", q:"Công ty con của NHTM phải tuân thủ giới hạn tín dụng riêng: tối đa 10% vốn tự có cho một đối tượng và 15% cho toàn bộ nhóm công ty con, công ty liên kết.", ans:true, ex:"Các công ty con, liên kết chịu giới hạn thấp hơn khách hàng thông thường do nguy cơ <strong>xung đột lợi ích cao hơn</strong>. Quy định nhằm kiểm soát rủi ro giao dịch nội bộ trong tập đoàn tài chính – ngân hàng." },
+  { id:34, sec:"IV", q:"Lãi suất cho vay thả nổi được điều chỉnh định kỳ theo một lãi suất tham chiếu xác định trước.", ans:true, ex:"Lãi suất thả nổi (floating rate) điều chỉnh theo định kỳ (3, 6, 12 tháng…) dựa trên lãi suất tham chiếu (ví dụ: lãi suất tiết kiệm + biên độ cố định). Điều này <strong>phân bổ rủi ro lãi suất</strong> sang phía khách hàng vay." },
+  { id:35, sec:"IV", q:"Phí suất tín dụng (APR) phản ánh tổng chi phí vay thực tế trên số tiền khách hàng thực nhận, bao gồm cả lãi suất và các loại phí.", ans:true, ex:"APR (Annual Percentage Rate) tính đến tất cả chi phí thực sự chi trả so với số tiền thực nhận, bao gồm lãi suất danh nghĩa, phí thẩm định, phí quản lý… Đây là thước đo <strong>minh bạch hơn</strong> so với lãi suất danh nghĩa." },
+  { id:36, sec:"IV", q:"Tài sản bảo đảm có thể thay thế hoàn toàn việc thẩm định năng lực tài chính và dòng tiền của khách hàng vay.", ans:false, ex:"<strong>Sai.</strong> Tài sản bảo đảm là <strong>nguồn trả nợ dự phòng</strong>, không thay thế thẩm định dòng tiền. Khi xử lý tài sản bảo đảm, giá trị thực tế thu được thường thấp hơn giá trị định giá do chi phí pháp lý, thời gian và biến động thị trường." },
+  { id:37, sec:"IV", q:"Tài sản bảo đảm là nguồn trả nợ chính, còn dòng tiền chỉ là nguồn trả nợ dự phòng.", ans:false, ex:"<strong>Sai – nguyên tắc ngược lại.</strong> <strong>Dòng tiền từ phương án vay vốn/thu nhập của khách hàng</strong> mới là nguồn trả nợ <strong>chính</strong>. Tài sản bảo đảm chỉ là nguồn trả nợ <strong>dự phòng</strong> khi nguồn chính không đủ." },
+
+  // === SECTION V ===
+  { id:38, sec:"V", q:"Quy trình tín dụng chuẩn gồm 5 bước: lập hồ sơ, phân tích, quyết định, giải ngân, giám sát và thanh lý tín dụng.", ans:true, ex:"Đây là quy trình tín dụng căn bản của NHTM. Mỗi bước đều có vai trò kiểm soát rủi ro riêng và phải được thực hiện <strong>độc lập, có hồ sơ lưu trữ</strong> để đảm bảo tính minh bạch và trách nhiệm giải trình." },
+  { id:39, sec:"V", q:"Bộ phận kinh doanh (relationship manager) có thể tự phê duyệt các khoản tín dụng trong phạm vi phụ trách của mình mà không cần qua cơ chế phê duyệt độc lập.", ans:false, ex:"<strong>Sai.</strong> Phê duyệt tín dụng phải thực hiện <strong>độc lập</strong> với bộ phận kinh doanh, theo thẩm quyền và cơ chế phân cấp nội bộ. Sự tách biệt này tránh xung đột lợi ích và đảm bảo quyết định tín dụng <strong>khách quan</strong>." },
+  { id:40, sec:"V", q:"Ngân hàng chỉ có thể giải ngân sau khi hợp đồng tín dụng, hợp đồng bảo đảm được ký kết đầy đủ và chứng từ phù hợp mục đích vay.", ans:true, ex:"Điều kiện giải ngân gồm: (1) hoàn thiện hợp đồng và hồ sơ bảo đảm, (2) chứng từ chứng minh mục đích sử dụng vốn hợp lệ, (3) khoản rút vốn nằm trong hạn mức và thời hạn hiệu lực đã phê duyệt. Giải ngân sai điều kiện là nguyên nhân phổ biến <strong>dẫn đến nợ xấu</strong>." },
+  { id:41, sec:"V", q:"Sau khi giải ngân, ngân hàng không cần tiếp tục theo dõi khoản vay vì rủi ro đã được đánh giá kỹ trước khi cho vay.", ans:false, ex:"<strong>Sai.</strong> Giám sát sau giải ngân (monitoring) là bước bắt buộc. Ngân hàng cần theo dõi mục đích sử dụng vốn, tình hình tài chính khách hàng, diễn biến tài sản bảo đảm và các dấu hiệu cảnh báo sớm <strong>trong suốt thời hạn khoản vay</strong>." },
+  { id:42, sec:"V", q:"Khi tài sản bảo đảm có dấu hiệu giảm giá trị hoặc có rủi ro pháp lý, ngân hàng cần thực hiện định giá lại.", ans:true, ex:"Đây là nội dung quan trọng của bước giám sát sau vay. Tài sản bảo đảm có thể giảm giá trị theo thời gian hoặc phát sinh rủi ro pháp lý (tranh chấp, quy hoạch). Định giá lại kịp thời giúp ngân hàng <strong>yêu cầu bổ sung TSBĐ hoặc xử lý sớm</strong>." },
+  { id:43, sec:"V", q:"Thanh lý tín dụng chỉ xảy ra khi khách hàng không trả được nợ và ngân hàng phải xử lý tài sản bảo đảm.", ans:false, ex:"<strong>Sai.</strong> Thanh lý tín dụng là bước <strong>kết thúc bình thường</strong> của quy trình khi: (1) khách hàng trả hết nợ gốc và lãi đúng hạn, hoặc (2) khoản vay đáo hạn. Xử lý TSBĐ chỉ là một trường hợp thanh lý <strong>đặc biệt</strong> khi có vi phạm." },
+
+  // === SECTION VI ===
+  { id:44, sec:"VI", q:"Nợ xấu (NPL) theo quy định gồm các khoản nợ thuộc nhóm 3, 4 và 5.", ans:true, ex:"Nợ xấu bao gồm: <strong>Nhóm 3</strong> – Nợ dưới tiêu chuẩn (91–180 ngày quá hạn), <strong>Nhóm 4</strong> – Nợ nghi ngờ (181–360 ngày), <strong>Nhóm 5</strong> – Nợ có khả năng mất vốn (trên 360 ngày). Tỷ lệ NPL = (Nợ nhóm 3+4+5) / Tổng dư nợ." },
+  { id:45, sec:"VI", q:"Nợ nhóm 2 (nợ cần chú ý) có số ngày quá hạn từ 10 đến 90 ngày.", ans:true, ex:"Nợ cần chú ý (Special Mention) là các khoản nợ có dấu hiệu cần theo dõi nhưng chưa ở mức xấu. Số ngày quá hạn 10–90 ngày là tiêu chí định lượng, bên cạnh các tiêu chí <strong>định tính về khả năng trả nợ</strong>." },
+  { id:46, sec:"VI", q:"Nợ nhóm 3 (nợ dưới tiêu chuẩn) có số ngày quá hạn từ 181 đến 360 ngày.", ans:false, ex:"<strong>Sai.</strong> Nợ nhóm 3 (dưới tiêu chuẩn) có số ngày quá hạn từ <strong>91–180 ngày</strong>. Khoảng 181–360 ngày là <strong>nợ nhóm 4</strong> (nghi ngờ). Nhầm lẫn hai nhóm này là lỗi phổ biến khi phân loại nợ." },
+  { id:47, sec:"VI", q:"Tỷ lệ bao phủ nợ xấu (NPL Coverage Ratio) bằng tổng dự phòng rủi ro tín dụng chia cho tổng nợ xấu.", ans:true, ex:"Tỷ lệ bao phủ nợ xấu cho thấy ngân hàng đã trích lập dự phòng bao nhiêu % trên tổng nợ xấu. Tỷ lệ càng cao, ngân hàng càng có <strong>'đệm' tài chính tốt</strong> để hấp thụ tổn thất mà không ảnh hưởng đến vốn chủ sở hữu." },
+  { id:48, sec:"VI", q:"Phân loại nợ chỉ dựa vào số ngày quá hạn, không cần xem xét các yếu tố định tính.", ans:false, ex:"<strong>Sai.</strong> Phân loại nợ theo <strong>Thông tư 31/2024/TT-NHNN</strong> kết hợp cả tiêu chí <strong>định lượng</strong> (ngày quá hạn) và <strong>định tính</strong> (khả năng trả nợ, thông tin từ CIC và TCTD khác). Ngân hàng phải chuyển nhóm nợ xấu hơn nếu thông tin tín dụng cho thấy rủi ro cao hơn." },
+  { id:49, sec:"VI", q:"Cơ cấu lại thời hạn trả nợ (gia hạn nợ) sẽ tự động giúp khoản nợ trở về nhóm tốt hơn và loại bỏ rủi ro tín dụng.", ans:false, ex:"<strong>Sai.</strong> Cơ cấu lại thời hạn trả nợ <strong>không</strong> tự động xóa bỏ bản chất rủi ro. Nợ cơ cấu lại vẫn phải được theo dõi riêng và có thể phải giữ nguyên nhóm nợ hoặc tiếp tục phân loại theo <strong>khả năng trả nợ thực tế</strong>." },
+  { id:50, sec:"VI", q:"Đòn bẩy tài chính tăng nhanh và doanh thu giảm bất thường là các dấu hiệu cảnh báo sớm nguy cơ nợ xấu từ phía khách hàng.", ans:true, ex:"Hệ thống cảnh báo sớm (Early Warning System) theo dõi các tín hiệu: doanh thu sụt giảm đột ngột, đòn bẩy tài chính (D/E) tăng nhanh, chậm trả gốc lãi, xin gia hạn nhiều lần, <strong>sử dụng vốn ngắn hạn tài trợ tài sản dài hạn</strong>. Phát hiện sớm giúp can thiệp trước khi khoản vay chuyển thành nợ xấu." },
+];
+
+const SCENARIOS = [
+  {
+    id:"S1", sec:"VII",
+    scenario:"Ngân hàng A tính toán nhu cầu vay hợp lý của công ty X là <strong>800 triệu đồng</strong>. Tài sản bảo đảm là bất động sản định giá <strong>1.200 triệu đồng</strong>, ngân hàng cho vay tối đa <strong>70% giá trị tài sản</strong>.",
+    question:"Hỏi: Ngân hàng cho vay tối đa bao nhiêu?",
+    choices:["A. 840 triệu","B. 800 triệu","C. 1.200 triệu","D. 1.680 triệu"],
+    correct:1,
+    ex:"<strong>Đáp án: B – 800 triệu đồng.</strong><br>Mức cho vay theo TSBĐ = 70% × 1.200 = <strong>840 triệu</strong>.<br>Mức cho vay theo nhu cầu = <strong>800 triệu</strong>.<br>Ngân hàng chọn mức <strong>thấp hơn</strong> giữa hai mức (TSBĐ là điều kiện cần nhưng không quyết định toàn bộ). → Cho vay <strong>800 triệu</strong>."
+  },
+  {
+    id:"S2", sec:"VII",
+    scenario:"Doanh nghiệp B xin vay <strong>2 tỷ đồng</strong>, thế chấp máy móc thiết bị định giá <strong>3,5 tỷ đồng</strong>. Chính sách ngân hàng cho vay tối đa <strong>50% giá trị tài sản là máy móc</strong>.",
+    question:"Hỏi: Ngân hàng có thể cho vay đủ 2 tỷ không? Nếu không, mức tối đa là bao nhiêu?",
+    choices:["A. Có, cho vay đủ 2 tỷ","B. Không, tối đa 1.750 triệu","C. Không, tối đa 1.500 triệu","D. Có, cho vay đủ nếu đủ điều kiện khác"],
+    correct:1,
+    ex:"<strong>Đáp án: B – Không, tối đa 1.750 triệu đồng.</strong><br>Mức cho vay tối đa theo TSBĐ = 50% × 3.500 = <strong>1.750 triệu</strong>, thấp hơn nhu cầu 2.000 triệu.<br>Để được vay đủ 2 tỷ, doanh nghiệp cần bổ sung TSBĐ ≥ (2.000 – 1.750) / 50% = <strong>500 triệu đồng</strong> giá trị tài sản thêm."
+  }
+];
+
+const sectionNames = {
+  "I": "I. NHTM & Bảng Cân Đối",
+  "II": "II. Nguyên Lý Quản Trị NHTM",
+  "III": "III. Khái Quát Về Tín Dụng Ngân Hàng",
+  "IV": "IV. Chính Sách Tín Dụng",
+  "V": "V. Quy Trình Tín Dụng",
+  "VI": "VI. Chất Lượng Tín Dụng",
+  "VII": "VII. Tình Huống Tính Toán",
+};
+
+let revealed = new Set();
+let currentFilter = 'all';
+
+function buildUI() {
+  const container = document.getElementById('mainContainer');
+  container.innerHTML = '';
+  const sections = {};
+  data.forEach(q => {
+    if (!sections[q.sec]) sections[q.sec] = [];
+    sections[q.sec].push(q);
+  });
+  sections["VII"] = [];
+
+  const sectionOrder = ["I","II","III","IV","V","VI","VII"];
+  sectionOrder.forEach(sec => {
+    const show = currentFilter === 'all' || currentFilter === sec;
+    if (!show) return;
+
+    const title = document.createElement('div');
+    title.className = 'section-title';
+    title.textContent = sectionNames[sec] || sec;
+    container.appendChild(title);
+
+    if (sec !== "VII") {
+      (sections[sec] || []).forEach(q => {
+        container.appendChild(buildCard(q));
+      });
+    } else {
+      SCENARIOS.forEach(s => {
+        container.appendChild(buildScenarioCard(s));
+      });
+    }
+  });
+  updateProgress();
+}
+
+function buildCard(q) {
+  const div = document.createElement('div');
+  div.className = 'card' + (revealed.has('q'+q.id) ? ' revealed' : '');
+  div.id = 'card-q' + q.id;
+  div.onclick = () => toggleCard('q'+q.id, div);
+  div.innerHTML = `
+    <div class="card-header">
+      <div class="q-num">${q.id}</div>
+      <div class="q-text">${q.q}</div>
+    </div>
+    ${!revealed.has('q'+q.id) ? '<div class="tap-hint">👆 Nhấn để xem đáp án</div>' : ''}
+    <div class="answer-area">
+      <div class="verdict ${q.ans ? 'true' : 'false'}">${q.ans ? '✅ ĐÚNG' : '❌ SAI'}</div>
+      <div class="explanation">${q.ex}</div>
+    </div>
+  `;
+  return div;
+}
+
+function buildScenarioCard(s) {
+  const div = document.createElement('div');
+  div.className = 'card' + (revealed.has(s.id) ? ' revealed' : '');
+  div.id = 'card-' + s.id;
+  div.onclick = () => toggleCard(s.id, div);
+  const choicesHTML = s.choices.map((c,i) =>
+    `<span class="choice ${revealed.has(s.id) && i===s.correct ? 'correct' : ''}">${c}</span>`
+  ).join('');
+  div.innerHTML = `
+    <div class="scenario-box">${s.scenario}</div>
+    <div class="q-text" style="margin-bottom:0.5rem">${s.question}</div>
+    <div class="choices">${choicesHTML}</div>
+    ${!revealed.has(s.id) ? '<div class="tap-hint">👆 Nhấn để xem đáp án</div>' : ''}
+    <div class="answer-area">
+      <div class="explanation">${s.ex}</div>
+    </div>
+  `;
+  return div;
+}
+
+function toggleCard(id, div) {
+  if (revealed.has(id)) return;
+  revealed.add(id);
+  div.classList.add('revealed');
+  div.onclick = null;
+  const hint = div.querySelector('.tap-hint');
+  if (hint) hint.remove();
+  const area = div.querySelector('.answer-area');
+  if (area) area.style.display = 'block';
+  // refresh choices for scenario
+  const choices = div.querySelectorAll('.choice');
+  if (choices.length > 0) {
+    const allScenarios = SCENARIOS;
+    const sc = allScenarios.find(s => s.id === id);
+    if (sc) {
+      choices.forEach((c, i) => { if (i === sc.correct) c.classList.add('correct'); });
+    }
+  }
+  updateProgress();
+}
+
+function revealAll() {
+  data.forEach(q => revealed.add('q'+q.id));
+  SCENARIOS.forEach(s => revealed.add(s.id));
+  buildUI();
+}
+
+function hideAll() {
+  revealed.clear();
+  buildUI();
+}
+
+function resetProgress() {
+  revealed.clear();
+  buildUI();
+}
+
+function filterSection(sec, btn) {
+  currentFilter = sec;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildUI();
+}
+
+function updateProgress() {
+  const total = 52; // 50 + 2 scenarios
+  const done = revealed.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Đã xem: ${done} / ${total} câu`;
+  document.getElementById('scoreVal').innerHTML = `${done}<span style="font-size:0.9rem;font-weight:500;color:var(--sub)">/${total}</span>`;
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙 Dark mode' : '☀️ Light mode';
+}
+
+buildUI();
+</script>
+</body>
+</html>
